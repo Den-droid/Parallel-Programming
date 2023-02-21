@@ -17,8 +17,8 @@ public class BounceFrame extends JFrame {
     private static void setColorsAndPriority() {
         colors.put("Blue", Color.blue);
         colors.put("Red", Color.red);
-        colorsPriority.put(Color.red, 10);
-        colorsPriority.put(Color.blue, 1);
+        colorsPriority.put(Color.red, Thread.MAX_PRIORITY);
+        colorsPriority.put(Color.blue, Thread.MIN_PRIORITY);
     }
 
     public BounceFrame() {

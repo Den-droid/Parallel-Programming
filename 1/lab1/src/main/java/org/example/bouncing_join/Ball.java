@@ -2,6 +2,7 @@ package org.example.bouncing_join;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.util.Random;
 
 class Ball {
     private BallCanvas canvas;
@@ -16,8 +17,13 @@ class Ball {
     public Ball(Color color, BallCanvas c) {
         this.canvas = c;
         this.color = color;
-        x = 0;
-        y = 0;
+        if (Math.random() < 0.5) {
+            x = new Random().nextInt(this.canvas.getWidth());
+            y = 0;
+        } else {
+            x = 0;
+            y = new Random().nextInt(this.canvas.getHeight());
+        }
     }
 
     public void draw(Graphics2D g2) {

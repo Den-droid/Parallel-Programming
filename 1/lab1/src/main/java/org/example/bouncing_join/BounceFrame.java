@@ -4,22 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BounceFrame extends JFrame {
     private final BallCanvas canvas;
     public static final int WIDTH = 450;
     public static final int HEIGHT = 350;
-    private static final Map<String, Color> colors = new HashMap<>();
-
-    private static void setColorsAndPriority() {
-        colors.put("Blue", Color.blue);
-        colors.put("Red", Color.red);
-    }
 
     public BounceFrame() {
-        setColorsAndPriority();
 
         this.setSize(WIDTH, HEIGHT);
         this.setTitle("Bounce program");
@@ -33,46 +24,18 @@ public class BounceFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
 
-        Label redLabel = new Label();
-        redLabel.setText("Red");
-
-        Label blueLabel = new Label();
-        blueLabel.setText("Blue");
-
-        TextField redTextField = new TextField("0");
-        TextField blueTextField = new TextField("0");
+        Label label = new Label("Count: ");
+        TextField textField = new TextField("0");
 
         JButton buttonStart = new JButton("Start");
         JButton buttonStop = new JButton("Stop");
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Create several balls simultaneously
-                int blueBallsCount = Integer.parseInt(blueTextField.getText());
-                int redBallsCount = Integer.parseInt(redTextField.getText());
-                BallThread[] threads = new BallThread[blueBallsCount + redBallsCount];
+                int count = Integer.parseInt(textField.getText());
 
-                for (int i = 0; i < redBallsCount; i++) {
-                    Ball b = new Ball(Color.red, canvas);
-                    canvas.add(b);
-
-                    BallThread thread = new BallThread(b);
-
-                    threads[i] = thread;
-                }
-
-                for (int i = redBallsCount; i < blueBallsCount + redBallsCount; i++) {
-                    Ball b = new Ball(Color.blue, canvas);
-                    canvas.add(b);
-
-                    BallThread thread = new BallThread(b);
-
-                    threads[i] = thread;
-                }
-
-                for (int i = 0; i < threads.length; i++) {
-                    threads[i].start();
-                }
+                MainThread thread = new MainThread(count, canvas);
+                thread.start();
             }
         });
         buttonStop.addActionListener(new ActionListener() {
@@ -82,10 +45,8 @@ public class BounceFrame extends JFrame {
             }
         });
 
-        buttonPanel.add(redLabel);
-        buttonPanel.add(redTextField);
-        buttonPanel.add(blueLabel);
-        buttonPanel.add(blueTextField);
+        buttonPanel.add(label);
+        buttonPanel.add(textField);
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
