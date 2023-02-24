@@ -32,7 +32,7 @@ public class BounceFrame extends JFrame {
 
                 Ball blue = new Ball(Color.blue, canvas);
                 canvas.add(blue);
-                threads[0] = new BallThread(blue, null);
+                threads[0] = new BallThread(blue);
 
                 Ball red = new Ball(Color.red, canvas);
                 canvas.add(red);

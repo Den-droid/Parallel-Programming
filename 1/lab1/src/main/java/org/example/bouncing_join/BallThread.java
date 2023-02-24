@@ -5,6 +5,11 @@ public class BallThread extends Thread {
 
     private BallThread previousThread;
 
+    public BallThread(Ball ball){
+        this.b = ball;
+        this.previousThread = null;
+    }
+
     public BallThread(Ball ball, BallThread previousThread) {
         this.previousThread = previousThread;
         this.b = ball;
