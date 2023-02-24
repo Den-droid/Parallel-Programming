@@ -11,7 +11,6 @@ public class BounceFrame extends JFrame {
     public static final int HEIGHT = 350;
 
     public BounceFrame() {
-
         this.setSize(WIDTH, HEIGHT);
         this.setTitle("Bounce program");
         this.canvas = new BallCanvas();
@@ -24,18 +23,24 @@ public class BounceFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
 
-        Label label = new Label("Count: ");
-        TextField textField = new TextField("0");
-
         JButton buttonStart = new JButton("Start");
         JButton buttonStop = new JButton("Stop");
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int count = Integer.parseInt(textField.getText());
+                BallThread[] threads = new BallThread[2];
 
-                MainThread thread = new MainThread(count, canvas);
-                thread.start();
+                Ball blue = new Ball(Color.blue, canvas);
+                canvas.add(blue);
+                threads[0] = new BallThread(blue, null);
+
+                Ball red = new Ball(Color.red, canvas);
+                canvas.add(red);
+                threads[1] = new BallThread(red, threads[0]);
+
+                for (int i = 0; i < threads.length; i++) {
+                    threads[i].start();
+                }
             }
         });
         buttonStop.addActionListener(new ActionListener() {
@@ -44,9 +49,6 @@ public class BounceFrame extends JFrame {
                 System.exit(0);
             }
         });
-
-        buttonPanel.add(label);
-        buttonPanel.add(textField);
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);

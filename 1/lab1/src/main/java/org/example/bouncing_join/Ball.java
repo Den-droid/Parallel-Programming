@@ -5,7 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 class Ball {
-    private BallCanvas canvas;
+    private Component canvas;
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
     private int x;
