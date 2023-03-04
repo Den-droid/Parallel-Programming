@@ -14,12 +14,10 @@ public class Main {
     }
 
     public static void syncSymbol() {
-        Lock lock = new Lock(3);
+        Lock lock = new Lock(2);
         SymbolSyncThread symbolSyncThread = new SymbolSyncThread(lock, '-', 0);
         SymbolSyncThread symbolSyncThread1 = new SymbolSyncThread(lock, '|', 1);
-        SymbolSyncThread symbolSyncThread2 = new SymbolSyncThread(lock, '/', 2);
         symbolSyncThread.start();
         symbolSyncThread1.start();
-        symbolSyncThread2.start();
     }
 }

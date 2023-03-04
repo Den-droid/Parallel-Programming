@@ -36,9 +36,9 @@ public class Lock {
             checkValue = 0;
         }
 
-        if (num % 150 == 0)
+        if (num % 100 == 0)
             System.out.println();
-        if (num == 150 * 150 - (maximumSymbols - 1))
+        if (num == 100 * 100 - (maximumSymbols - 1))
             isToStop = true;
 
         this.notifyAll();

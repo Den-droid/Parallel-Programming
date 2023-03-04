@@ -1,7 +1,10 @@
 package org.example.counter;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Counter {
     private final Object lock = new Object();
+    private ReentrantLock reentrantLock = new ReentrantLock();
     private int counter;
 
     public Counter(int counter) {
@@ -20,16 +23,16 @@ public class Counter {
         }
     }
 
-    public void syncBlockIncrement() {
-        synchronized (this) {
-            increment();
-        }
+    public void reentrantLockIncrement() {
+        reentrantLock.lock();
+        increment();
+        reentrantLock.unlock();
     }
 
-    public void syncBlockDecrement() {
-        synchronized (this) {
-            decrement();
-        }
+    public void reentrantLockDecrement() {
+        reentrantLock.lock();
+        decrement();
+        reentrantLock.unlock();
     }
 
     public synchronized void syncMethodIncrement() {

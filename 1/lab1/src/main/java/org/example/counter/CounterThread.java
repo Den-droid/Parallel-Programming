@@ -13,11 +13,11 @@ public class CounterThread extends Thread {
     public void run() {
         if (increment) {
             for (int i = 0; i < 100000; i++) {
-                counter.syncObjectIncrement();
+                counter.reentrantLockIncrement();
             }
         } else {
             for (int i = 0; i < 100000; i++) {
-                counter.syncObjectDecrement();
+                counter.reentrantLockDecrement();
             }
         }
     }
