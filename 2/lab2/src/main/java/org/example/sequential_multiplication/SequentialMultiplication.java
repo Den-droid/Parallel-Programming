@@ -1,8 +1,9 @@
 package org.example.sequential_multiplication;
 
+import org.example.MultiplicationAlgorithm;
 import org.example.common.Result;
 
-public class SequentialMultiplication {
+public class SequentialMultiplication implements MultiplicationAlgorithm {
     private int[][] first;
     private int[][] second;
     private Result result;
@@ -17,16 +18,16 @@ public class SequentialMultiplication {
         for (int i = 0; i < first.length; i++) {
             for (int j = 0; j < second[i].length; j++) {
                 int sum = 0;
-                int columnFirst = 0;
-                int rowSecond = 0;
-                while (columnFirst != first[i].length &&
-                        rowSecond != second.length) {
-                    sum += first[i][columnFirst] * second[rowSecond][j];
-                    columnFirst++;
-                    rowSecond++;
+                for (int k = 0; k < second.length; k++) {
+                    sum += first[i][k] * second[k][j];
                 }
-                this.result.setElement(i, j, sum);
+                result.setElement(i, j, sum);
             }
         }
+    }
+
+    @Override
+    public int[][] getResult() {
+        return result.getResult();
     }
 }

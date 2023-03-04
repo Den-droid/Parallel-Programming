@@ -1,83 +1,110 @@
 package org.example;
 
 import org.example.fox_multiplication.FoxMultiplication;
+import org.example.sequential_multiplication.SequentialMultiplication;
 import org.example.stripped_multiplication.StrippedMultiplication;
 import org.example.utils.MatrixUtil;
 
 public class Main {
     public static void main(String[] args) {
+//        testResult();
 //        testOne();
 //        testThreadsCount();
         testMatrixSize();
     }
 
+    public static void testResult() {
+        int[][] first = MatrixUtil.generateMatrix(4, 4, 10, 99);
+        int[][] second = MatrixUtil.generateMatrix(4, 4, 10, 99);
+
+        System.out.println("First matrix: ");
+        MatrixUtil.showMatrix(first);
+        System.out.println("\nSecond matrix: ");
+        MatrixUtil.showMatrix(second);
+
+        StrippedMultiplication sm = new StrippedMultiplication(first, second, first.length);
+        sm.multiply();
+        System.out.println("\nStripped multiplication. Result: ");
+        MatrixUtil.showMatrix(sm.getResult());
+
+        FoxMultiplication fm = new FoxMultiplication(first, second, 4);
+        fm.multiply();
+        System.out.println("\nFox multiplication. Result: ");
+        MatrixUtil.showMatrix(fm.getResult());
+
+        SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
+        seqMul.multiply();
+        System.out.println("\nSequential multiplication. Result: ");
+        MatrixUtil.showMatrix(seqMul.getResult());
+    }
+
     public static void testOne() {
         int[][] first = MatrixUtil.generateMatrix(500, 500, 10, 99);
         int[][] second = MatrixUtil.generateMatrix(500, 500, 10, 99);
-        StrippedMultiplication sm = new StrippedMultiplication(first, second, first.length);
 
-        long start = System.currentTimeMillis();
-        sm.multiply();
-        long finish = System.currentTimeMillis();
+        StrippedMultiplication sm = new StrippedMultiplication(first, second, 12);
+        long time = getTimeOfExperiment(sm);
+        System.out.println(time);
 
-        System.out.println(finish - start);
+        FoxMultiplication fm = new FoxMultiplication(first, second, 12);
+        time = getTimeOfExperiment(fm);
+        System.out.println(time);
 
-        FoxMultiplication fm = new FoxMultiplication(first, second, 16);
-
-        start = System.currentTimeMillis();
-        fm.multiply();
-        finish = System.currentTimeMillis();
-
-        System.out.println(finish - start);
+        SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
+        time = getTimeOfExperiment(seqMul);
+        System.out.println(time);
     }
 
     public static void testThreadsCount() {
-        int size = 500;
+        int size = 1500;
         int min = 10;
         int max = 99;
 
-        int[] strippedThreadsCounts = {(int) (size * 0.01), (int) (size * 0.05),
-                (int) (size * 0.1), (int) (size * 0.2), (int) (size * 0.5), size};
-        int[] foxThreadsCounts = {5, 10, 15, 25, 50, 100};
+        int[] threadsCounts = {4, 9, 16, 36, 64, 100};
         int[][] first = MatrixUtil.generateMatrix(size, size, min, max);
         int[][] second = MatrixUtil.generateMatrix(size, size, min, max);
         int experimentsCount = 4;
 
-        for (int threadsCount : strippedThreadsCounts) {
+        for (int threadsCount : threadsCounts) {
             StrippedMultiplication stripped = new StrippedMultiplication(first, second, threadsCount);
 
             long experimentsTime = 0;
             for (int i = 0; i < experimentsCount; i++) {
-                long start = System.currentTimeMillis();
-                stripped.multiply();
-                long finish = System.currentTimeMillis();
-                experimentsTime += finish - start;
+                experimentsTime += getTimeOfExperiment(stripped);
             }
             long average = experimentsTime / experimentsCount;
 
-            System.out.println("Stripped (500x500): threads count - " + threadsCount +
-                    "; time - " + average + " ms;");
+            System.out.println("Stripped (" + size + "x" + size + "): " +
+                    "threads count - " + threadsCount + "; time - " + average + " ms;");
         }
 
         System.out.println();
 
-        for (int threadsCount : foxThreadsCounts) {
+        for (int threadsCount : threadsCounts) {
             FoxMultiplication fox = new FoxMultiplication(first, second, threadsCount);
 
             long experimentsTime = 0;
             for (int i = 0; i < experimentsCount; i++) {
-                long start = System.currentTimeMillis();
-                fox.multiply();
-                long finish = System.currentTimeMillis();
-
+                experimentsTime += getTimeOfExperiment(fox);
                 fox.resetResult();
-                experimentsTime += finish - start;
             }
             long average = experimentsTime / experimentsCount;
 
-            System.out.println("Fox (500x500): threads count - " + threadsCount +
-                    "; time - " + average + " ms;");
+            System.out.println("Fox (" + size + "x" + size + "): " +
+                    "threads count - " + threadsCount + "; time - " + average + " ms;");
         }
+        System.out.println();
+
+        SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
+
+        long experimentsTime = 0;
+        for (int i = 0; i < experimentsCount; i++) {
+            experimentsTime += getTimeOfExperiment(seqMul);
+        }
+        long average = experimentsTime / experimentsCount;
+
+        System.out.println("Sequential (" + size + "x" + size + "): " +
+                "threads count - 1; time - " + average + " ms;");
     }
 
     public static void testMatrixSize() {
@@ -86,44 +113,53 @@ public class Main {
 
         int[] sizes = {500, 1000, 1500, 2000};
         int experimentsCount = 4;
-        int threadsCount;
+        int threadsCount = 16;
 
         for (int matrixSize : sizes) {
             int[][] first = MatrixUtil.generateMatrix(matrixSize, matrixSize, min, max);
             int[][] second = MatrixUtil.generateMatrix(matrixSize, matrixSize, min, max);
-            threadsCount = first.length;
 
             StrippedMultiplication stripped = new StrippedMultiplication(first, second, threadsCount);
 
             long experimentsTime = 0;
             for (int i = 0; i < experimentsCount; i++) {
-                long start = System.currentTimeMillis();
-                stripped.multiply();
-                long finish = System.currentTimeMillis();
-                experimentsTime += finish - start;
+                experimentsTime += getTimeOfExperiment(stripped);
             }
             long average = experimentsTime / experimentsCount;
 
-            System.out.println("Stripped: matrix size - " + matrixSize +
-                    "; time - " + average + " ms;");
+            System.out.println("Stripped: matrix size - " + matrixSize + "x"
+                    + matrixSize + "; time - " + average + " ms;");
 
-            threadsCount = 16;
             FoxMultiplication fox = new FoxMultiplication(first, second, threadsCount);
 
             experimentsTime = 0;
             for (int i = 0; i < experimentsCount; i++) {
-                long start = System.currentTimeMillis();
-                fox.multiply();
-                long finish = System.currentTimeMillis();
-
+                experimentsTime += getTimeOfExperiment(fox);
                 fox.resetResult();
-                experimentsTime += finish - start;
             }
             average = experimentsTime / experimentsCount;
 
-            System.out.println("Fox: matrix size - " + matrixSize +
-                    "; time - " + average + " ms;");
+            System.out.println("Fox: matrix size - " + matrixSize + "x"
+                    + matrixSize + "; time - " + average + " ms;");
+
+            SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
+
+            experimentsTime = 0;
+            for (int i = 0; i < experimentsCount; i++) {
+                experimentsTime += getTimeOfExperiment(seqMul);
+            }
+            average = experimentsTime / experimentsCount;
+
+            System.out.println("Sequential: matrix size - " + matrixSize + "x"
+                    + matrixSize + "; time - " + average + " ms;");
             System.out.println();
         }
+    }
+
+    public static long getTimeOfExperiment(MultiplicationAlgorithm algorithm) {
+        long start = System.currentTimeMillis();
+        algorithm.multiply();
+        long finish = System.currentTimeMillis();
+        return finish - start;
     }
 }

@@ -23,14 +23,14 @@ public class FoxMultiplicationThread extends Thread {
     @Override
     public void run() {
         int rowFirstSize = size;
-        int columnSecondSize = size;
+        int colSecondSize = size;
 
         if (rowOffset + size > first.length) {
             rowFirstSize = first.length - rowOffset;
         }
 
         if (colOffset + size > second[0].length) {
-            columnSecondSize = second[0].length - colOffset;
+            colSecondSize = second[0].length - colOffset;
         }
 
         for (int k = 0; k < first.length; k += size) {
@@ -48,12 +48,12 @@ public class FoxMultiplicationThread extends Thread {
             int[][] blockFirst = copyBlock(first, rowOffset, rowOffset + rowFirstSize,
                     k, k + colFirstSize);
             int[][] blockSecond = copyBlock(second, k, k + rowSecondSize,
-                    colOffset, colOffset + columnSecondSize);
+                    colOffset, colOffset + colSecondSize);
 
             int[][] resBlock = multiplyBlocks(blockFirst, blockSecond);
             for (int i = 0; i < resBlock.length; i++) {
                 for (int j = 0; j < resBlock[i].length; j++) {
-                    this.result.addToElement(i + rowOffset, j + colOffset, resBlock[i][j]);
+                    result.addToElement(i + rowOffset, j + colOffset, resBlock[i][j]);
                 }
             }
         }
@@ -63,9 +63,11 @@ public class FoxMultiplicationThread extends Thread {
         int[][] resBlock = new int[blockFirst.length][blockSecond[0].length];
         for (int i = 0; i < blockFirst.length; i++) {
             for (int j = 0; j < blockSecond[0].length; j++) {
+                int sum = 0;
                 for (int k = 0; k < blockSecond.length; k++) {
-                    resBlock[i][j] += blockFirst[i][k] * blockSecond[k][j];
+                    sum += blockFirst[i][k] * blockSecond[k][j];
                 }
+                resBlock[i][j] = sum;
             }
         }
         return resBlock;

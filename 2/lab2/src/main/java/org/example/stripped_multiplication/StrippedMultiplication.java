@@ -1,8 +1,9 @@
 package org.example.stripped_multiplication;
 
+import org.example.MultiplicationAlgorithm;
 import org.example.common.Result;
 
-public class StrippedMultiplication {
+public class StrippedMultiplication implements MultiplicationAlgorithm {
     private int[][] first;
     private int[][] second;
     private int threadsCount;
@@ -28,6 +29,7 @@ public class StrippedMultiplication {
         }
     }
 
+    @Override
     public void multiply() {
         int rowsPerTime = this.first.length / threadsCount;
         int rowsLeft = this.first.length % threadsCount;
@@ -58,6 +60,7 @@ public class StrippedMultiplication {
         }
     }
 
+    @Override
     public int[][] getResult() {
         return this.result.getResult();
     }

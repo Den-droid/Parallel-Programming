@@ -1,8 +1,9 @@
 package org.example.fox_multiplication;
 
+import org.example.MultiplicationAlgorithm;
 import org.example.common.Result;
 
-public class FoxMultiplication {
+public class FoxMultiplication implements MultiplicationAlgorithm {
     private int[][] first;
     private int[][] second;
     private int threadsCount;
@@ -22,6 +23,7 @@ public class FoxMultiplication {
         }
     }
 
+    @Override
     public void multiply() {
         int step = (int) Math.ceil(1.0 * first.length / (int) Math.sqrt(threadsCount));
 
@@ -47,9 +49,10 @@ public class FoxMultiplication {
     }
 
     public void resetResult() {
-        this.result = new Result(first.length, second[0].length);
+        result.reset();
     }
 
+    @Override
     public int[][] getResult() {
         return this.result.getResult();
     }

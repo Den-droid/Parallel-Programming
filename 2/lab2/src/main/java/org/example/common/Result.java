@@ -15,6 +15,10 @@ public class Result {
         this.result[row][column] += toAdd;
     }
 
+    public void reset() {
+        result = new int[result.length][result[0].length];
+    }
+
     public int getElement(int row, int column) {
         return this.result[row][column];
     }

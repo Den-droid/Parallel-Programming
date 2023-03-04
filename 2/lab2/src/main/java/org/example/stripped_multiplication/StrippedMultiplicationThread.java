@@ -38,7 +38,7 @@ public class StrippedMultiplicationThread extends Thread {
                     firstElemColumn++;
                     secondElemRow++;
                 }
-                this.result.setElement(rowFirst, columnSecond, sum);
+                result.setElement(rowFirst, columnSecond, sum);
 
                 if (columnSecond == 0) {
                     columnSecond = second[0].length - 1;
