@@ -42,17 +42,17 @@ public class Main {
         int[][] first = MatrixUtil.generateMatrix(1500, 1500, 10, 99);
         int[][] second = MatrixUtil.generateMatrix(1500, 1500, 10, 99);
 
-//        StrippedMultiplication sm = new StrippedMultiplication(first, second, 12);
-//        long time = getTimeOfExperiment(sm);
-//        System.out.println(time);
+        StrippedMultiplication sm = new StrippedMultiplication(first, second, 12);
+        long time = getTimeOfExperiment(sm);
+        System.out.println(time);
 
 //        FoxMultiplication fm = new FoxMultiplication(first, second, 8);
 //        long time = getTimeOfExperiment(fm);
 //        System.out.println(time);
 
-        SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
-        long time = getTimeOfExperiment(seqMul);
-        System.out.println(time);
+//        SequentialMultiplication seqMul = new SequentialMultiplication(first, second);
+//        long time = getTimeOfExperiment(seqMul);
+//        System.out.println(time);
     }
 
     public static void testThreadsCount() {
